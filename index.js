@@ -33,7 +33,7 @@ app.use("/api/v1/user", userRouter);
 
 // Only listen when running locally
 if (process.env.NODE_ENV !== "production") {
-  const PORT = process.env.PORT || 5000;
+  const PORT = 1122;
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });
