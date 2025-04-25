@@ -31,7 +31,7 @@ app.use(morgan("dev"));
 // Routes
 app.use("/api/v1/user", userRouter);
 
-// Only listen when running locally
+// Only
 if (process.env.NODE_ENV !== "production") {
   const PORT = 1122;
   app.listen(PORT, () => {
