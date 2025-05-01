@@ -5,6 +5,9 @@ const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
 const userRouter = require("./Routes/UserRoute.js");
 const morgan = require("morgan");
+const carRoutes = require('./Routes/CarRoute.js');
+const ScooterRoutes = require('./Routes/ScooterRoute.js');
+const bookRoutes = require('./Routes/BookingRoute.js');
 
 const app = express();
 
@@ -30,10 +33,13 @@ app.use(morgan("dev"));
 
 // Routes
 app.use("/api/v1/user", userRouter);
+app.use('/api/cars', carRoutes);
+app.use('/api/scooter', ScooterRoutes);
+app.use('/api',bookRoutes );
 
-// Only
+// Only listen when running locally
 if (process.env.NODE_ENV !== "production") {
-  const PORT = 1122;
+  const PORT = process.env.PORT || 5000;
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
   });

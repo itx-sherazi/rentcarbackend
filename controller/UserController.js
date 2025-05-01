@@ -5,7 +5,7 @@ const crypto = require("crypto");
 
 const signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password,phone } = req.body;
     const user = await User.findOne({ email });
     if (user) {
       return res
@@ -16,6 +16,7 @@ const signup = async (req, res) => {
     const newUser = await User.create({
      name,
       email,
+      phone,
       password: hashedPassword,
     });
     return res
@@ -88,10 +89,67 @@ const allUsers = async (req, res) => {
     });
   }
 };
+const updateUser = async (req, res) => {
+  try {
+    const { id } = req.params; // user ka ID URL se aayega
+    const { name, email, phone, status } = req.body; // updated fields
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      { name, email, phone, status },
+      { new: true, runValidators: true } // return new updated user and validate fields
+    ).select("-password"); // password hide
+
+    if (!updatedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      updatedUser,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: `Error: ${error} while updating user`,
+    });
+  }
+};
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params; // user ka ID URL se aayega
+
+    const deletedUser = await User.findByIdAndDelete(id);
+
+    if (!deletedUser) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: `Error: ${error} while deleting user`,
+    });
+  }
+};
+
 
 module.exports = {
   signup,
   login,
   logout,
   allUsers,
+  updateUser,
+  deleteUser
 };
